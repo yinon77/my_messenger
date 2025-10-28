@@ -1,16 +1,25 @@
 """
 Simple Messenger Client
 A basic TCP client that connects to the messenger server and allows sending/receiving messages.
+NEW FEATURES:
+- Timestamps on all messages
+- Chat history when you join
+- Emoji support (just type emojis normally! 😊)
 """
 
 import socket
 import threading
+from datetime import datetime  # For message timestamps
 
 # Server configuration - must match server settings
 HOST = '127.0.0.1'  # Server address (localhost)
 PORT = 5555         # Server port
 
 # Get username from user
+print("=" * 50)
+print("Welcome to Simple Messenger! 💬")
+print("You can use emojis in your messages! 😊👍🎉")
+print("=" * 50)
 username = input("Enter your username: ")
 
 # Create client socket and connect to server
@@ -51,8 +60,12 @@ def send_messages():
             # Get message from user
             message = input('')
             
-            # Format message with username and send to server
-            full_message = f'{username}: {message}'
+            # NEW FEATURE: Add timestamp to message
+            timestamp = datetime.now().strftime('%H:%M:%S')
+            
+            # Format message with timestamp, username, and send to server
+            # Emojis work automatically with UTF-8 encoding! 😊
+            full_message = f'[{timestamp}] {username}: {message}'
             client.send(full_message.encode('utf-8'))
         except:
             # If error occurs, close connection and break
@@ -67,4 +80,3 @@ receive_thread.start()
 
 # Start sending messages (runs in main thread)
 send_messages()
-

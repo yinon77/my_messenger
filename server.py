@@ -5,6 +5,7 @@ A basic TCP socket server that allows multiple clients to connect and chat toget
 
 import socket
 import threading
+from datetime import datetime  # For message timestamps
 
 # Server configuration
 HOST = '127.0.0.1'  # Localhost - server runs on local machine
@@ -15,14 +16,28 @@ clients = []
 # List to keep track of client usernames
 usernames = []
 
+# NEW FEATURE: Chat history
+# Stores all messages sent in the chat session
+chat_history = []
 
-def broadcast(message):
+
+def broadcast(message, save_to_history=True):
     """
     Send a message to all connected clients
     
     Args:
         message (bytes): The message to broadcast to all clients
+        save_to_history (bool): Whether to save this message to chat history
     """
+    # NEW FEATURE: Save message to chat history
+    if save_to_history:
+        # Get current timestamp
+        timestamp = datetime.now().strftime('%H:%M:%S')
+        # Decode message and store with timestamp
+        message_text = message.decode('utf-8')
+        chat_history.append(f'[{timestamp}] {message_text}')
+        print(f'[{timestamp}] {message_text}')  # Also display on server
+    
     for client in clients:
         try:
             client.send(message)
@@ -77,6 +92,7 @@ def receive_connections():
     """
     print(f'Server is running on {HOST}:{PORT}')
     print('Waiting for connections...')
+    print('📨 Emoji support enabled! 😊')  # NEW FEATURE: Emoji support demo
     
     while True:
         # Accept new connection
@@ -96,6 +112,13 @@ def receive_connections():
         broadcast(f'{username} has joined the chat!'.encode('utf-8'))
         client.send('Connected to the server!'.encode('utf-8'))
         
+        # NEW FEATURE: Send chat history to new client
+        if chat_history:
+            client.send('\n--- Chat History ---'.encode('utf-8'))
+            for old_message in chat_history:
+                client.send(old_message.encode('utf-8'))
+            client.send('--- End of History ---\n'.encode('utf-8'))
+        
         # Start a new thread to handle this client
         thread = threading.Thread(target=handle_client, args=(client,))
         thread.start()
@@ -108,4 +131,3 @@ server.listen()
 
 # Start accepting connections
 receive_connections()
-

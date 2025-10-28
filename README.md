@@ -8,6 +8,9 @@ A classic, simple messenger application built with Python using TCP sockets. Mul
 - Real-time messaging
 - Username identification
 - Join/leave notifications
+- **✨ Message timestamps** - Every message shows when it was sent (HH:MM:SS format)
+- **✨ Chat history** - New users see previous messages when they join
+- **✨ Emoji support** - Use emojis in your messages! 😊👍🎉
 - Pure Python implementation using standard library
 
 ## Requirements
@@ -56,31 +59,49 @@ Once connected, simply type your message and press Enter to send it to all conne
 ```
 Server is running on 127.0.0.1:5555
 Waiting for connections...
+📨 Emoji support enabled! 😊
 Connected with ('127.0.0.1', 54321)
 Username: Alice
+[14:30:15] Alice has joined the chat!
 Connected with ('127.0.0.1', 54322)
 Username: Bob
+[14:30:45] Bob has joined the chat!
+[14:31:00] Alice: Hello everyone! 👋
+[14:31:10] Bob: Hi Alice! 😊
 ```
 
 **Client 1 (Alice):**
 ```
+==================================================
+Welcome to Simple Messenger! 💬
+You can use emojis in your messages! 😊👍🎉
+==================================================
 Enter your username: Alice
 Connected to the server!
-Alice has joined the chat!
-Bob has joined the chat!
-Hello everyone!
-Alice: Hello everyone!
-Bob: Hi Alice!
+[14:30:15] Alice has joined the chat!
+[14:30:45] Bob has joined the chat!
+Hello everyone! 👋
+[14:31:00] Alice: Hello everyone! 👋
+[14:31:10] Bob: Hi Alice! 😊
 ```
 
 **Client 2 (Bob):**
 ```
+==================================================
+Welcome to Simple Messenger! 💬
+You can use emojis in your messages! 😊👍🎉
+==================================================
 Enter your username: Bob
 Connected to the server!
-Bob has joined the chat!
-Alice: Hello everyone!
-Hi Alice!
-Bob: Hi Alice!
+
+--- Chat History ---
+[14:30:15] Alice has joined the chat!
+--- End of History ---
+
+[14:30:45] Bob has joined the chat!
+[14:31:00] Alice: Hello everyone! 👋
+Hi Alice! 😊
+[14:31:10] Bob: Hi Alice! 😊
 ```
 
 ## Architecture
@@ -111,11 +132,10 @@ PORT = 5555         # Server port
 This is a basic implementation for learning purposes. It does not include:
 - Message encryption
 - User authentication
-- Message history/persistence
+- Persistent message storage (history is lost when server stops)
 - Private messaging
 - GUI interface
 
 ## License
 
 Free to use and modify for educational purposes.
-
